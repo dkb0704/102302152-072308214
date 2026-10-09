@@ -1,0 +1,18 @@
+test_create_and_share_without_leaking_owner (test_server.ServiceTests) ... ok
+test_cross_origin_mutation_rejected (test_server.ServiceTests) ... ok
+test_data_survives_service_restart (test_server.ServiceTests) ... ok
+test_invalid_input_never_saved (test_server.ServiceTests) ... ok
+test_invalid_timezone_offset_is_not_normalized (test_server.ServiceTests) ... ok
+test_length_limits_match_unicode_characters (test_server.ServiceTests) ... ok
+test_malformed_and_nonobject_json (test_server.ServiceTests) ... ok
+test_missing_or_invalid_owner_key (test_server.ServiceTests) ... ok
+test_missing_record (test_server.ServiceTests) ... ok
+test_nonowner_forbidden_owner_can_close (test_server.ServiceTests) ... ok
+test_oversized_body_rejected (test_server.ServiceTests) ... ok
+test_private_files_not_served (test_server.ServiceTests) ... ok
+test_unpaired_unicode_surrogate_returns_validation_error (test_server.ServiceTests) ... ok
+
+----------------------------------------------------------------------
+Ran 13 tests in 7.211s
+
+OK
