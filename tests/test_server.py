@@ -74,6 +74,12 @@ class ServiceTests(unittest.TestCase):
         self.assertEqual(self.req(data={**VALID, 'name': '🌱' * 40})[0], 201)
         self.assertEqual(self.req(data={**VALID, 'name': '🌱' * 41})[0], 400)
 
+    def test_invalid_timezone_offset_is_not_normalized(self):
+        self.assertEqual(self.req(data={**VALID, 'occurredAt': '2026-01-01T12:00:00+00:99'})[0], 400)
+
+    def test_unpaired_unicode_surrogate_returns_validation_error(self):
+        self.assertEqual(self.req(data={**VALID, 'name': '\ud800'})[0], 400)
+
     def test_malformed_and_nonobject_json(self):
         for raw in [b'{', b'[]', b'null']:
             self.assertEqual(self.req(raw=raw)[0], 400)

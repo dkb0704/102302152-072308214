@@ -31,6 +31,8 @@ def validate(data):
         if value is None: value = ''
         if not isinstance(value, str): errors[key] = label + '格式不正确'; continue
         value = value.strip(); clean[key] = value
+        if any(0xD800 <= ord(ch) <= 0xDFFF for ch in value):
+            errors[key] = label + '包含无效字符'; continue
         if required and not value: errors[key] = '请填写' + label
         elif len(value) > limit: errors[key] = '%s最多%d字' % (label, limit)
     clean['type'] = data.get('type'); clean['category'] = data.get('category')
@@ -39,6 +41,7 @@ def validate(data):
     value = data.get('occurredAt')
     try:
         if not isinstance(value, str) or not re.fullmatch(r'\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{1,3})?(?:Z|[+-]\d{2}:\d{2})', value): raise ValueError()
+        if not value.endswith('Z') and (int(value[-5:-3]) > 23 or int(value[-2:]) > 59): raise ValueError()
         when = datetime.fromisoformat(value.replace('Z', '+00:00')).astimezone(timezone.utc)
         if when > datetime.now(timezone.utc): errors['occurredAt'] = '发生时间不能晚于当前时间'
         clean['occurredAt'] = when.isoformat(timespec='milliseconds').replace('+00:00', 'Z')

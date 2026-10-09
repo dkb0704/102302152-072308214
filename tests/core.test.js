@@ -14,3 +14,7 @@ test('explicit search rejects all whitespace',()=>{assert.throws(()=>C.query(pos
 test('combine type, category and place without changing input',()=>{assert.deepEqual(C.query(posts,{category:'校园卡',place:'图书馆',type:'found'}).map(x=>x.id),['a']);assert.equal(posts[0].id,'a');});
 test('sort descending and optionally retain ended posts',()=>{assert.deepEqual(C.query(posts,{}).map(x=>x.id),['b','a']);assert.deepEqual(C.query(posts,{includeClosed:true}).map(x=>x.id),['c','b','a']);});
 test('only owner can close, preserving original record',()=>{const p={...posts[0],ownerId:'owner'};assert.throws(()=>C.close(p,'other'));const out=C.close(p,'owner');assert.equal(out.status,'closed');assert.equal(p.status,'active');assert.throws(()=>C.close(out,'owner'));});
+test('reject nonstandard midnight normalization and broken Unicode',()=>{
+  assert.throws(()=>C.validate({...valid(),occurredAt:'2026-01-01T24:00:00Z'},now),e=>!!e.fields.occurredAt);
+  assert.throws(()=>C.validate({...valid(),name:'\ud800'},now),e=>!!e.fields.name);
+});

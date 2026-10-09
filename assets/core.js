@@ -18,7 +18,8 @@
       const value = input[key] == null ? '' : input[key];
       if (typeof value !== 'string') { fields[key] = `${label}格式不正确`; p[key]=''; continue; }
       p[key] = value.trim();
-      if (required && !p[key]) fields[key] = `请填写${label}`;
+      if ([...p[key]].some(ch => ch.codePointAt(0)>=0xD800 && ch.codePointAt(0)<=0xDFFF)) fields[key] = `${label}包含无效字符`;
+      else if (required && !p[key]) fields[key] = `请填写${label}`;
       else if ([...p[key]].length > max) fields[key] = `${label}最多${max}字`;
     }
     p.type = input.type; p.category = input.category;
@@ -32,7 +33,7 @@
     if (match) {
       const y=+match[1], m=+match[2], d=+match[3];
       const days=new Date(Date.UTC(y,m,0)).getUTCDate();
-      validDay=m>=1 && m<=12 && d>=1 && d<=days;
+      validDay=m>=1 && m<=12 && d>=1 && d<=days && +t.slice(11,13)<24 && +t.slice(14,16)<60 && +t.slice(17,19)<60;
     }
     if (!match || !validDay || !Number.isFinite(millis)) fields.occurredAt = '请选择有效的日期和时间';
     else if (millis > Date.parse(now)) fields.occurredAt = '发生时间不能晚于当前时间';
