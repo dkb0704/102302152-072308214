@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>寻回 · 校园失物招领</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/styles.css">
+  <script defer src="assets/core.js"></script>
+  <script defer src="assets/store.js"></script>
+  <script defer src="assets/app.js"></script>
+</head>
+<body>
+  <a href="#main" class="skip-link">跳到主要内容</a>
+  <header class="site-header"><div class="header-inner">
+    <a href="#home" class="brand" aria-label="寻回首页"><span class="brand-icon">↗</span><span>寻回<small>校园失物招领</small></span></a>
+    <nav aria-label="主导航"><a href="#home" data-nav="home">信息广场</a><a href="#mine" data-nav="mine">我的发布</a><a href="#publish" class="button small" data-nav="publish">＋ 发布信息</a></nav>
+  </div></header>
+  <main id="main" tabindex="-1"><div class="loading">正在读取校园信息…</div></main>
+  <footer><span>寻回 · 让每一份善意都有回应</span><span>线下核对物品特征，确认后再交接。</span></footer>
+  <div id="toast" role="status" aria-live="polite" hidden></div>
+  <dialog id="confirm-dialog" aria-labelledby="dialog-title"><form method="dialog">
+    <span class="dialog-icon">✓</span><h2 id="dialog-title">确认结束这条信息？</h2><p id="dialog-copy"></p>
+    <p class="muted">结束后会保留在“我的发布”，不再出现在默认信息列表中。</p>
+    <div class="dialog-actions"><button value="cancel" class="button secondary">暂不修改</button><button type="button" id="confirm-close" class="button">确认</button></div>
+    <p id="dialog-error" role="alert" class="error"></p>
+  </form></dialog>
+  <noscript>请启用 JavaScript 后使用校园失物招领。</noscript>
+</body>
+</html>
