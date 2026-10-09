@@ -1,0 +1,15 @@
+const {test}=require('node:test');const assert=require('node:assert/strict');
+let S={};try{S=require('../assets/store.js');}catch(e){if(e.code!=='MODULE_NOT_FOUND')throw e;}
+class MemoryStorage {constructor(){this.data=new Map();}getItem(k){return this.data.has(k)?this.data.get(k):null;}setItem(k,v){this.data.set(k,v);}}
+const now=()=> '2026-10-09T12:00:00Z';
+const input={type:'found',name:'钥匙',category:'钥匙',place:'图书馆',occurredAt:'2026-10-08T08:00:00Z',contact:'测试专用',description:''};
+test('save, reload, close and reload again',async()=>{const mem=new MemoryStorage();const s=new S.LocalStore(mem,'a',now,[]);const p=await s.create(input);assert.equal(p.isMine,true);assert.equal(p.status,'active');const t=new S.LocalStore(mem,'a',now,[]);assert.equal((await t.list()).length,1);await t.close(p.id);assert.equal((await s.list())[0].status,'closed');});
+test('other browser owner cannot close local data via store',async()=>{const mem=new MemoryStorage();const a=new S.LocalStore(mem,'a',now,[]);const p=await a.create(input);const b=new S.LocalStore(mem,'b',now,[]);assert.equal((await b.list())[0].isMine,false);await assert.rejects(()=>b.close(p.id),/发布者/);assert.equal((await a.list())[0].status,'active');});
+test('public records do not expose owner key',async()=>{const s=new S.LocalStore(new MemoryStorage(),'secret',now,[]);const p=await s.create(input);assert.equal(Object.hasOwn(p,'ownerId'),false);assert.equal(JSON.stringify(await s.list()).includes('secret'),false);});
+test('invalid input is not persisted',async()=>{const s=new S.LocalStore(new MemoryStorage(),'a',now,[]);await assert.rejects(()=>s.create({...input,name:' '}));assert.deepEqual(await s.list(),[]);});
+test('corrupt JSON is reported and never overwritten',async()=>{const mem=new MemoryStorage();mem.setItem('campus.posts.v1','{broken');const s=new S.LocalStore(mem,'a',now,[]);await assert.rejects(()=>s.list(),/损坏/);assert.equal(mem.getItem('campus.posts.v1'),'{broken');});
+test('corrupt record schema is reported',async()=>{const mem=new MemoryStorage();mem.setItem('campus.posts.v1','[{"id":"x"}]');await assert.rejects(()=>new S.LocalStore(mem,'a',now,[]).list(),/损坏/);});
+test('failed save never reports success',async()=>{const mem=new MemoryStorage();const s=new S.LocalStore(mem,'a',now,[]);await s.list();mem.setItem=()=>{throw new Error('QuotaExceeded');};await assert.rejects(()=>s.create(input),/保存/);assert.equal((await s.list()).length,0);});
+test('owner identity survives reload',()=>{const mem=new MemoryStorage();const key=S.ownerKey(mem);assert.match(key,/^[0-9a-f]{64}$/);assert.equal(S.ownerKey(mem),key);});
+test('HTTP failure propagates without local fallback',async()=>{const s=new S.HttpStore('a',async()=>{throw new Error('network');});await assert.rejects(()=>s.list(),/连接/);});
+test('HTTP server validation fields are retained',async()=>{const s=new S.HttpStore('a',async()=>({ok:false,json:async()=>({error:'请填写名称',fields:{name:'请填写名称'}})}));await assert.rejects(()=>s.create(input),e=>e.fields.name==='请填写名称');});
