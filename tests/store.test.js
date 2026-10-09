@@ -10,6 +10,11 @@ test('invalid input is not persisted',async()=>{const s=new S.LocalStore(new Mem
 test('corrupt JSON is reported and never overwritten',async()=>{const mem=new MemoryStorage();mem.setItem('campus.posts.v1','{broken');const s=new S.LocalStore(mem,'a',now,[]);await assert.rejects(()=>s.list(),/损坏/);assert.equal(mem.getItem('campus.posts.v1'),'{broken');});
 test('corrupt record schema is reported',async()=>{const mem=new MemoryStorage();mem.setItem('campus.posts.v1','[{"id":"x"}]');await assert.rejects(()=>new S.LocalStore(mem,'a',now,[]).list(),/损坏/);});
 test('failed save never reports success',async()=>{const mem=new MemoryStorage();const s=new S.LocalStore(mem,'a',now,[]);await s.list();mem.setItem=()=>{throw new Error('QuotaExceeded');};await assert.rejects(()=>s.create(input),/保存/);assert.equal((await s.list()).length,0);});
-test('owner identity survives reload',()=>{const mem=new MemoryStorage();const key=S.ownerKey(mem);assert.match(key,/^[0-9a-f]{64}$/);assert.equal(S.ownerKey(mem),key);});
+test('owner identity survives reload',()=>{const mem=new MemoryStorage();const key=S.ownerKey(mem);assert.match(key,/^[0-9a-f]{64}$/);assert.equal(S.ownerKey(mem),key);
+  const fs=require('node:fs'),vm=require('node:vm'),{createRequire}=require('node:module');
+  const file=require.resolve('../assets/store.js'), box={exports:{}};
+  vm.runInNewContext(fs.readFileSync(file,'utf8'),{module:box,require:createRequire(file),globalThis:{},Uint8Array});
+  assert.match(box.exports.ownerKey(new MemoryStorage()),/^[0-9a-f]{64}$/);
+});
 test('HTTP failure propagates without local fallback',async()=>{const s=new S.HttpStore('a',async()=>{throw new Error('network');});await assert.rejects(()=>s.list(),/连接/);});
 test('HTTP server validation fields are retained',async()=>{const s=new S.HttpStore('a',async()=>({ok:false,json:async()=>({error:'请填写名称',fields:{name:'请填写名称'}})}));await assert.rejects(()=>s.create(input),e=>e.fields.name==='请填写名称');});

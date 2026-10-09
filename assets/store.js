@@ -1,10 +1,10 @@
 (function(root,factory){
-  if(typeof module==='object'&&module.exports)module.exports=factory(require('./core.js'));
-  else root.CampusStore=factory(root.CampusCore);
-})(globalThis,function(C){
+  if(typeof module==='object'&&module.exports)module.exports=factory(require('./core.js'),require('node:crypto').webcrypto);
+  else root.CampusStore=factory(root.CampusCore,root.crypto);
+})(globalThis,function(C,cryptoProvider){
   'use strict';
   const POSTS_KEY='campus.posts.v1', OWNER_KEY='campus.owner.v1';
-  function randomKey(){return Array.from(crypto.getRandomValues(new Uint8Array(32)),b=>b.toString(16).padStart(2,'0')).join('');}
+  function randomKey(){return Array.from(cryptoProvider.getRandomValues(new Uint8Array(32)),b=>b.toString(16).padStart(2,'0')).join('');}
   function ownerKey(storage){
     try {
       const old=storage.getItem(OWNER_KEY);

@@ -2,33 +2,33 @@
 > campus-lost-and-found@1.0.0 test
 > node --test tests/*.test.js
 
-✔ trim valid fields without losing description (2.746375ms)
-✔ reject whitespace name (0.8325ms)
-✔ reject whitespace place (0.173125ms)
-✔ reject whitespace contact (0.122541ms)
-✔ enforce name Unicode length boundary (1.347583ms)
-✔ enforce place Unicode length boundary (0.192542ms)
-✔ enforce contact Unicode length boundary (0.173541ms)
-✔ enforce description Unicode length boundary (0.199125ms)
-✔ reject future and invalid date (0.273583ms)
-✔ reject unknown type or category (0.55825ms)
-✔ search trim, case and no result (1.098375ms)
-✔ explicit search rejects all whitespace (0.1675ms)
-✔ combine type, category and place without changing input (0.121625ms)
-✔ sort descending and optionally retain ended posts (16.67875ms)
-✔ only owner can close, preserving original record (0.225208ms)
-✔ reject nonstandard midnight normalization and broken Unicode (0.231291ms)
-✔ save, reload, close and reload again (6.530667ms)
-✔ other browser owner cannot close local data via store (1.036541ms)
-✔ public records do not expose owner key (0.381042ms)
-✔ invalid input is not persisted (1.007167ms)
-✔ corrupt JSON is reported and never overwritten (0.268667ms)
-✔ corrupt record schema is reported (0.229333ms)
-✔ failed save never reports success (0.393334ms)
-✔ owner identity survives reload (0.372834ms)
-✔ HTTP failure propagates without local fallback (0.414917ms)
-✔ HTTP server validation fields are retained (0.360709ms)
-✔ a delayed old response cannot overwrite a newer closed state (3.344333ms)
+✔ trim valid fields without losing description (2.258292ms)
+✔ reject whitespace name (0.638125ms)
+✔ reject whitespace place (0.142458ms)
+✔ reject whitespace contact (0.115209ms)
+✔ enforce name Unicode length boundary (1.749584ms)
+✔ enforce place Unicode length boundary (0.328625ms)
+✔ enforce contact Unicode length boundary (0.226333ms)
+✔ enforce description Unicode length boundary (0.215625ms)
+✔ reject future and invalid date (0.306ms)
+✔ reject unknown type or category (0.358167ms)
+✔ search trim, case and no result (0.960541ms)
+✔ explicit search rejects all whitespace (0.1335ms)
+✔ combine type, category and place without changing input (0.190792ms)
+✔ sort descending and optionally retain ended posts (16.120041ms)
+✔ only owner can close, preserving original record (0.261292ms)
+✔ reject nonstandard midnight normalization and broken Unicode (0.248334ms)
+✔ save, reload, close and reload again (3.860375ms)
+✔ other browser owner cannot close local data via store (1.10825ms)
+✔ public records do not expose owner key (0.314167ms)
+✔ invalid input is not persisted (1.159416ms)
+✔ corrupt JSON is reported and never overwritten (0.282ms)
+✔ corrupt record schema is reported (0.225708ms)
+✔ failed save never reports success (0.257708ms)
+✔ owner identity survives reload (3.529208ms)
+✔ HTTP failure propagates without local fallback (0.324542ms)
+✔ HTTP server validation fields are retained (0.319167ms)
+✔ a delayed old response cannot overwrite a newer closed state (2.858125ms)
 ℹ tests 27
 ℹ suites 0
 ℹ pass 27
@@ -36,4 +36,4 @@
 ℹ cancelled 0
 ℹ skipped 0
 ℹ todo 0
-ℹ duration_ms 130.858334
+ℹ duration_ms 128.908291
